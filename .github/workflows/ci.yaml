@@ -22,9 +22,9 @@ jobs:
                   password: ${{ secrets.DOCKER_TOKEN }}  # Docker Hub token from GitHub Secrets
 
             - name: Build and push Docker image
-                uses: docker/build-push-action@v7        # Build and push the Docker image to Docker Hub
-                with:
-                    push: true                         # Push the built image to Docker Hub
-                    tags: user/app:latest              # Tag for the Docker image
+              uses: docker/build-push-action@v7        # Build and push the Docker image to Docker Hub
+              with:
+                  push: true                         # Push the built image to Docker Hub
+                  tags: user/app:latest              # Tag for the Docker image
 
             
