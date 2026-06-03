@@ -2,7 +2,7 @@ name: CI pipeline
 
 
 jobs:
-    build-&-push:
+    build_&_push:
         runs-on: ubuntu-latest
         steps:
             - name: checkout code
