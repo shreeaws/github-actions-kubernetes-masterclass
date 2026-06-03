@@ -1,5 +1,9 @@
 name: CI pipeline
 
+on:
+    push:
+        branches: [main]                          # Trigger the workflow on pushes to the main branch
+
 
 jobs:
     build_push:
