@@ -1,0 +1,32 @@
+name: CD Workflow
+on:
+    workflow_run:
+        workflows: ["CI pipeline"]                   # Trigger this workflow after the successful completion of the "CI pipeline" workflow
+        types: [completed]
+        branches: [main]                          # Ensure it only runs for the main branch
+
+
+jobs:
+    deploy_k8s:
+        if: ${{ github.event.workflow_run.conclusion == 'success' }}  # Only run if the CI pipeline completed successfully
+        runs-on: ubuntu-latest
+        steps:
+            - name: Remote SSH for cluster
+              uses: appleboy/ssh-action@v1        # SSH into the EC2 instance to deploy the application to the Kubernetes cluster
+              with:
+                host: ${{ secrets.EC2_HOST }}    # EC2 instance IP address from GitHub Secrets
+                username: ${{ secrets.EC2_USER }}  # EC2 instance username from GitHub Secrets
+                key: ${{ secrets.EC2_SSH_KEY }}   # SSH private key for authentication from GitHub Secrets
+                script: |
+                    if [ ! -d /github-actions-kubernetes-masterclass ]; then
+                        git clone ${{ secrets.HTTP_REPO_URL }}     # Clone the repository if it doesn't exist
+                    fi
+                    cd /github-actions-kubernetes-masterclass
+                    git pull origin main                        # Pull the latest changes from the main branch
+                    if [ ! -f .env ]; then
+                        echo "Error: .env file is missing. Please create a .env file with the necessary environment variables and DB details."  # Check for the existence of the .env file and print an error message if it's missing
+                        exit 1
+                    fi
+                    docker compose pull                             # Pull the latest Docker images for the application
+                    docker compose up -d                          # Start the application using Docker Compose in detached mode
+                    docker image prune -f                             # Clean up unused Docker images to free up space
