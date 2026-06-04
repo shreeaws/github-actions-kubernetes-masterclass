@@ -21,12 +21,18 @@ jobs:
                   username: ${{ secrets.DOCKERHUB_USERNAME }}  # Docker Hub username from GitHub Secrets
                   password: ${{ secrets.DOCKERHUB_TOKEN }}  # Docker Hub token from GitHub Secrets
 
-            - name: Build and push Docker image
+            - name: Push Frontend Docker Image
               uses: docker/build-push-action@v7        # Build and push the Docker image to Docker Hub
               with:
                 context: ./frontend                        # Build context (current directory)
-                file: ./frontend/Dockerfile                # Path to the Dockerfile
                 push: true                         # Push the built image to Docker Hub
-                tags: user/app:latest              # Tag for the Docker image
+                tags: |
+                    ${{ secrets.DOCKERHUB_USERNAME }}/skillpulse-frontend:latest  # Tag for the Docker image
 
-            
+            - name: Push Backend Docker Image
+              uses: docker/build-push-action@v7        # Build and push the Docker image to Docker Hub
+              with:
+                context: ./backend                         # Build context (current directory)
+                push: true                         # Push the built image to Docker Hub
+                tags: |
+                    ${{ secrets.DOCKERHUB_USERNAME }}/skillpulse-backend:latest   # Tag for the Docker image
