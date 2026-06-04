@@ -24,7 +24,9 @@ jobs:
             - name: Build and push Docker image
               uses: docker/build-push-action@v7        # Build and push the Docker image to Docker Hub
               with:
-                  push: true                         # Push the built image to Docker Hub
-                  tags: user/app:latest              # Tag for the Docker image
+                context: .                         # Build context (current directory)
+                file: backend/Dockerfile                # Path to the Dockerfile
+                push: true                         # Push the built image to Docker Hub
+                tags: user/app:latest              # Tag for the Docker image
 
             
