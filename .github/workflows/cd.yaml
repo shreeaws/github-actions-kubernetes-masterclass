@@ -19,7 +19,7 @@ jobs:
                 key: ${{ secrets.EC2_SSH_KEY }}   # SSH private key for authentication from GitHub Secrets
                 script: |
                     if [ ! -d /github-actions-kubernetes-masterclass ]; then
-                        git clone ${{ secrets.HTTP_REPO_URL }}     # Clone the repository if it doesn't exist
+                        git clone ${{ secrets.HTTP_REPO_URL }} /github-actions-kubernetes-masterclass    # Clone the repository if it doesn't exist
                     fi
                     cd /github-actions-kubernetes-masterclass
                     git pull origin main                        # Pull the latest changes from the main branch
